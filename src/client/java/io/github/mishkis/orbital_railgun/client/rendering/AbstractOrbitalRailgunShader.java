@@ -1,14 +1,13 @@
 package io.github.mishkis.orbital_railgun.client.rendering;
 
-import ladysnake.satin.api.event.PostWorldRenderCallback;
-import ladysnake.satin.api.event.ShaderEffectRenderCallback;
-import ladysnake.satin.api.experimental.ReadableDepthFramebuffer;
-import ladysnake.satin.api.managed.ManagedShaderEffect;
-import ladysnake.satin.api.managed.ShaderEffectManager;
-import ladysnake.satin.api.managed.uniform.Uniform1f;
-import ladysnake.satin.api.managed.uniform.Uniform3f;
-import ladysnake.satin.api.managed.uniform.UniformMat4;
-import ladysnake.satin.api.util.GlMatrices;
+import org.ladysnake.satin.api.event.PostWorldRenderCallback;
+import org.ladysnake.satin.api.experimental.ReadableDepthFramebuffer;
+import org.ladysnake.satin.api.managed.ManagedShaderEffect;
+import org.ladysnake.satin.api.managed.ShaderEffectManager;
+import org.ladysnake.satin.api.managed.uniform.Uniform1f;
+import org.ladysnake.satin.api.managed.uniform.Uniform3f;
+import org.ladysnake.satin.api.managed.uniform.UniformMat4;
+import org.ladysnake.satin.api.util.GlMatrices;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -43,7 +42,7 @@ public abstract class AbstractOrbitalRailgunShader implements PostWorldRenderCal
     }
 
     @Override
-    public void onWorldRendered(Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(Camera camera, float tickDelta) {
         if (shouldRender()) {
             uniformInverseTransformMatrix.set(GlMatrices.getInverseTransformMatrix(projectionMatrix));
             uniformCameraPosition.set(camera.getPos().toVector3f());

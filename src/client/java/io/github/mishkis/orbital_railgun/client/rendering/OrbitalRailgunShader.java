@@ -39,11 +39,11 @@ public class OrbitalRailgunShader extends AbstractOrbitalRailgunShader {
     }
 
     @Override
-    public void onWorldRendered(Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(Camera camera, float tickDelta) {
         if (shouldRender()) {
             uniformBlockPosition.set(BlockPosition);
         }
 
-        super.onWorldRendered(camera, tickDelta, nanoTime);
+        super.onWorldRendered(camera, tickDelta);
     }
 }

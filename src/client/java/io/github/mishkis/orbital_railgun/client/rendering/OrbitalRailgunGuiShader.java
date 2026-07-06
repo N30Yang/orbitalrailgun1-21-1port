@@ -2,7 +2,7 @@ package io.github.mishkis.orbital_railgun.client.rendering;
 
 import io.github.mishkis.orbital_railgun.OrbitalRailgun;
 import io.github.mishkis.orbital_railgun.item.OrbitalRailgunItem;
-import ladysnake.satin.api.managed.uniform.Uniform1f;
+import org.ladysnake.satin.api.managed.uniform.Uniform1f;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.util.Identifier;
@@ -41,7 +41,7 @@ public class OrbitalRailgunGuiShader extends AbstractOrbitalRailgunShader {
     }
 
     @Override
-    public void onWorldRendered(Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(Camera camera, float tickDelta) {
         if (shouldRender()) {
             hitResult = client.player.raycast(300f, tickDelta, false);
             switch (hitResult.getType()) {
@@ -59,6 +59,6 @@ public class OrbitalRailgunGuiShader extends AbstractOrbitalRailgunShader {
             }
         }
 
-        super.onWorldRendered(camera, tickDelta, nanoTime);
+        super.onWorldRendered(camera, tickDelta);
     }
 }
