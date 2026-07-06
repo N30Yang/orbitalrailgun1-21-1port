@@ -1,4 +1,4 @@
-#version 330 compatibility
+#version 150
 
 uniform sampler2D DiffuseSampler;
 uniform vec3 CameraPosition;

@@ -1,5 +1,4 @@
-#version 330 compatibility
-
+#version 150
 in vec4 Position;
 
 uniform mat4 ProjMat;
