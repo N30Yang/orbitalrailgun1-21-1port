@@ -2,13 +2,15 @@ package io.github.mishkis.orbital_railgun;
 
 import io.github.mishkis.orbital_railgun.item.OrbitalRailgunItem;
 import io.github.mishkis.orbital_railgun.item.OrbitalRailgunItems;
+import io.github.mishkis.orbital_railgun.network.ClientsyncPayload;
+import io.github.mishkis.orbital_railgun.network.ShootPayload;
 import io.github.mishkis.orbital_railgun.util.OrbitalRailgunStrikeManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -22,31 +24,33 @@ public class OrbitalRailgun implements ModInitializer {
     public static final String MOD_ID = "orbital_railgun";
     public static final Logger LOGGER = Logger.getLogger(MOD_ID);
 
-    public static final Identifier SHOOT_PACKET_ID = Identifier.of(MOD_ID, "shoot_packet");
-    public static final Identifier CLIENT_SYNC_PACKET_ID = Identifier.of(MOD_ID, "client_synch_packet");
-
     @Override
     public void onInitialize() {
         OrbitalRailgunItems.initialize();
         OrbitalRailgunStrikeManager.initialize();
 
-        ServerPlayNetworking.registerGlobalReceiver(SHOOT_PACKET_ID, ((minecraftServer, serverPlayerEntity, serverPlayNetworkHandler, packetByteBuf, packetSender) -> {
-            OrbitalRailgunItem orbitalRailgun = (OrbitalRailgunItem) packetByteBuf.readItemStack().getItem();
-            BlockPos blockPos = packetByteBuf.readBlockPos();
+        PayloadTypeRegistry.playC2S().register(ShootPayload.ID, ShootPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(ClientsyncPayload.ID, ClientsyncPayload.CODEC);
 
-            minecraftServer.execute(() -> {
-                orbitalRailgun.shoot(serverPlayerEntity);
+        ServerPlayNetworking.registerGlobalReceiver(ShootPayload.ID, (payload, context) => {
+            ServerPlayerEntity ServerPlayerEntity = context.player();
+            MinecraftServer server = ServerPlayerEntity.getServer();
+            BlockPos blockPos = payload.pos();
 
-                List<Entity> nearby = serverPlayerEntity.getWorld().getOtherEntities(null, Box.of(blockPos.toCenterPos(), 500., 500., 500.));
-                OrbitalRailgunStrikeManager.activeStrikes.put(new Pair<>(blockPos, nearby), new Pair<>(minecraftServer.getTicks(), serverPlayerEntity.getWorld().getRegistryKey()));
+            server.execute(() -> {
+                OrbitalRailgunItem orbitalrailgun = OrbitalRailgunItems.ORBITAL_RAILGUN;
+                orbitalRailgun.shoot(ServerPlayerEntity);
 
-                nearby.forEach((entity -> {
+                List<Entity> nearby = ServerPlayerEntity.getWorld().getOtherEntities(null, Box.of(blockPos.toCenterPos(), 500., 500., 500.));
+                OrbitalRailgunStrikeManager.activeStrikes.put(new Pair<>(blockPos, nearby), new Pair<>(server.getTicks(), serverPlayerEntity.getWorld().getRegistryKey()));
+
+                nearby.foreach((entity -> {
                     if (entity instanceof ServerPlayerEntity serverPlayer) {
-                        ServerPlayNetworking.send(serverPlayer, CLIENT_SYNC_PACKET_ID, PacketByteBufs.create().writeBlockPos(blockPos));
+                        ServerPlayNetworking.send(serverPlayer, new ClientsyncPayload(blockPos));
                     }
                 }));
             });
-        }));
+        });
 
         ServerTickEvents.END_SERVER_TICK.register(OrbitalRailgunStrikeManager::tick);
     }
