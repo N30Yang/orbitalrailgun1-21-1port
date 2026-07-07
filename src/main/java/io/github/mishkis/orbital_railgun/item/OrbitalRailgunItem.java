@@ -22,6 +22,8 @@ import java.util.function.Consumer;
 public class OrbitalRailgunItem extends Item implements GeoItem {
     private final AnimatableInstanceCache CACHE = GeckoLibUtil.createInstanceCache(this);
     public final MutableObject<GeoRenderProvider> renderProviderHolder = new MutableObject<>();
+    public Consumer<PlayerEntity> onScopeStart;
+    public Consumer<PlayerEntity> onScopeStop;
 
     public OrbitalRailgunItem() {
         super(new Item.Settings().rarity(Rarity.EPIC).maxCount(1));
@@ -40,10 +42,19 @@ public class OrbitalRailgunItem extends Item implements GeoItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!user.getItemCooldownManager().isCoolingDown(this)) {
+            if (world.isClient() && onScopeStart != null) {
+                onScopeStart.accpet(user);
+            }
             return ItemUsage.consumeHeldItem(world, user, hand);
         }
 
         return TypedActionResult.fail(user.getStackInHand(hand));
+    }
+
+    @Overridepublic void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+        if (world.isclient() && onScopeStop != null && user instanceof PlayerEntity player) {
+            onScopeStop.accept(player);
+        }
     }
 
     public void shoot(PlayerEntity user) {
