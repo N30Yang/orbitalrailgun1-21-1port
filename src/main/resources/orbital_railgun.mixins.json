@@ -1,12 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "io.github.mishkis.orbital_railgun.client.mixin",
+  "package": "io.github.mishkis.orbital_railgun.mixin",
   "compatibilityLevel": "JAVA_21",
-  "client": [
-    "AbstractClientPlayerEntity",
-    "MinecraftClientMixin",
-    "MouseMixin"
+  "mixins": [
   ],
   "injectors": {
     "defaultRequire": 1

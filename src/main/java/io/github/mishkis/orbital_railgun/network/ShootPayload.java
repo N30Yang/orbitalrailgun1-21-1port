@@ -7,6 +7,10 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * Client -> server: the player fired the railgun at {@code pos}.
+ * The fired item is always the Orbital Railgun, so only the target position is sent.
+ */
 public record ShootPayload(BlockPos pos) implements CustomPayload {
     public static final CustomPayload.Id<ShootPayload> ID =
             new CustomPayload.Id<>(Identifier.of(OrbitalRailgun.MOD_ID, "shoot_packet"));

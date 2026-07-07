@@ -3,7 +3,7 @@ package io.github.mishkis.orbital_railgun.client.mixin;
 import io.github.mishkis.orbital_railgun.client.rendering.OrbitalRailgunGuiShader;
 import io.github.mishkis.orbital_railgun.client.rendering.OrbitalRailgunShader;
 import io.github.mishkis.orbital_railgun.item.OrbitalRailgunItem;
-import io.github.mishkis.orbital_railgun.network.ShootPayload; 
+import io.github.mishkis.orbital_railgun.network.ShootPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
