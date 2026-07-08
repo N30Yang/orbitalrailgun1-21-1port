@@ -29,3 +29,9 @@ If you've ever wanted to destroy large swathes of land in an instant while havin
 Once you've crafted the Orbital Railgun, hold `right click` to aim and then `left click` to fire.
 
 *Note: This mod uses the Satin API for shaders, yet you shouldn't have to install it as it's included as a jar-in-jar dependency.*
+
+# AI USAGE!!
+
+* Used for Debugging and Learning java
+
+I HAVE USED BOTH THE [SFX MOD](https://modrinth.com/mod/orbital-railgun-sounds) and the [Original](https://modrinth.com/mod/orbital-railgun) mod in this project, most of credits to them! They are using the MIT licence so i am free to modify and distribute.
